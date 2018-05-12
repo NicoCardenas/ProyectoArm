@@ -8,7 +8,6 @@ _start:	MOV R0, #0x11 @ x1
 		MOV R5, #0x16 @ y3
 
 		SUB R6, R2, R0 @ x2 - x1
-		CMP R0, R2
 		SUB R7, R3, R1 @ y2 - y1
 		MUL R8, R6, R6 @ (x2 - x1)**2
 		MUL R9, R7, R7 @ (y2 - y1)**2
@@ -26,16 +25,27 @@ _start:	MOV R0, #0x11 @ x1
 		MUL R11, R9, R9 @ (y1 - y3)**2
 		ADD R8, R10, R11 @ (x1 - x3)**2 + (y1 - y3)**2
 
-		BNE FIN
-		CMPEQ R0, R2
-		CMP R0, R4
-		CMP R1, R3
-		CMP R1, R5
+		CMP R6, #0x0 @ R6 == 0
+		BEQ	CANCEL @ if R6 == 0 then jump FIN
+
+		CMP R7, #0x0 @ R7 == 0
+		BEQ	CANCEL @ if R7 == 0 then jump FIN
+		
+		CMP R8, #0x0 @ R8 == 0
+		BEQ	CANCEL @ if R8 == 0 then jump FIN
 
 		ADD R9, R6, R7
+		CMP R9, R8
+		BEQ CANCEL
 		ADD R10, R9, R8
 
-FIN:	MOV R0, R6 @ echo $? respuesta
-		MOV R7, #1
+		@ skipcond
+		@CMP R0, R2
+		@BLT FIN
+
+CANCEL: MOV R0, #-1
+		B FIN
+		MOV R0, R6 @ echo $? respuesta
+FIN:	MOV R7, #1
 		SVC 0
 .end
