@@ -12,6 +12,7 @@
 
 ## Recursos
 #### • http://users.ece.utexas.edu/~valvano/EE345M/Arm_EE382N_4.pdf
+#### • http://vision.gel.ulaval.ca/~jflalonde/cours/1001/h16/docs/arm-instructionset.pdf
 
 ## Comandos de ejecucion en el servidor
 #### • as -g -o Proyecto.o Proyecto.s
