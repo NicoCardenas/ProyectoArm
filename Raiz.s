@@ -1,6 +1,6 @@
 .text
 .global _start
-_start:	MOV R0, #150 @ a = R0
+_start:	MOV R0, #0 @ a = R0
 		MOV R1, #0 @ b = R1
 		MOV R2, #0 @ c = R2
 
@@ -8,7 +8,10 @@ _start:	MOV R0, #150 @ a = R0
 		MOV R11, #0 @ y = R11
 		MOV R12, #0 @ count = R12
 
-RAIZ:	MOV R10, R0 @ x = a
+RAIZ:	CMP R7, #0
+		ADDEQ R1, R1, #1
+		BEQ FIN
+		MOV R10, R0 @ x = a
 		MOV R11, #2 @ y = 2
 		MOV R12, #0 @ count = 0
 		BL 	DIV @ x div y

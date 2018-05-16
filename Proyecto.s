@@ -64,20 +64,20 @@ _start:	MOV R0, #2 @ x1
 		ADD R3, R2, R3
 
 		@ Area
-		ADD R4, R1, R2 @ lado b + lado c
-		MUL R4, R3, R4 @ perimetro * (lado b + lado c)
-		ADD R5, R0, R2 @ lado a + lado c
-		MUL R4, R5, R4 @ perimetro * (lado b + lado c) * (lado a + lado c)
-		ADD R5, R0, R1 @ lado a + lado b
-		MUL R4, R5, R4 @ perimetro * (lado b + lado c) * (lado a + lado c) * (lado a + lado b)
-		@ division
-		MOV R10, R4 @ x = perimetro * (lado b + lado c) * (lado a + lado c) * (lado a + lado b)
-		MOV R11, #16 @ y = 2
-		MOV R12, #0 @ count = 0
+		MOV R10, R3
+		MOV R11, #2
+		MOV R12, #0
 		BL DIV
-		MOV R4, R12
+		MOV R4, R12 @ s = perimetro div 2
+		@ s (s-a) (s-b) (s-c)
+		SUB R6, R4, R0
+		MUL R5, R6, R4
+		SUB R6, R4, R1
+		MUL R5, R6, R5
+		SUB R6, R4, R2
+		MUL R5, R6, R5
 		@ raiz
-		MOV R7, R4 @ a = raiz(lado c)
+		MOV R7, R5 @ a = raiz(lado c)
 		MOV R8, #0 @ b = 0
 		MOV R9, #0 @ c = 0
 		BL RAIZ
@@ -88,7 +88,10 @@ _start:	MOV R0, #2 @ x1
 		BEQ	CANCEL @ if R4 == 0 then jump FIN
 		B 	FIN
 
-RAIZ:	MOV R10, R7 @ x = a
+RAIZ:	CMP R7, #0
+		ADDEQ R8, R8, #1
+		BXEQ LR
+		MOV R10, R7 @ x = a
 		MOV R11, #2 @ y = 2
 		MOV R12, #0 @ count = 0
 		MOV SP, LR
