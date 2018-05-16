@@ -13,7 +13,7 @@ def main():
     3,4,4,3,5,2
     6,3,6,9,6,8
     2,5,7,5,9,5"""
-    x1,y1,x2,y2,x3,y3=2,6,9,12,15,20  
+    x1,y1,x2,y2,x3,y3=-3.5,2,1.5,5,1,-2  
     b1=comprobar(x1,x2,x3)
     b2=comprobar(y1,y2,y3)
     ladoA,ladoB,ladoC=lados(x1,x2,x3,y1,y2,y3)
@@ -21,6 +21,7 @@ def main():
     if(b1 and b2 and b3):
         areat=area(x1,x2,x3,y1,y2,y3)
         peri=perimetro(ladoA,ladoB,ladoC)
+        angulos(x1,x2,x3,y1,y2,y3)
     else:
         print("No es triangulo")
 
@@ -48,6 +49,19 @@ def  comprobar(x,y,z):
         return False
     else:
         return True
+
+def angulos(x1,x2,x3,y1,y2,y3):
+    mAB=(y2-y1)/(x2-x1)   
+    mBC=(y3-y2)/(x3-x2)
+    mCA=(y3-y1)/(x3-x1)
+    deg = 180.0 / math.pi   
+    angulo1=abs(math.atan((mAB-mCA)/(1+(mAB*mCA))) *deg )
+    angulo2=abs(math.atan((mAB-mBC)/(1+(mBC*mAB))) *deg )
+    angulo3=abs(math.atan((mCA-mBC)/(1+(mBC*mCA))) *deg )
+    print ("Angulo1: ",angulo1)
+    print ("Angulo2: ",angulo2)
+    print ("Angulo3: ",angulo3)
+    print ("Suma total: ",angulo1+angulo2+angulo3)
 
 
 def area(x1,x2,x3,y1,y2,y3):    
