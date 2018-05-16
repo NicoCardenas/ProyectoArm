@@ -84,7 +84,30 @@ _start:	MOV R0, #2 @ x1
 		SUB R8, R8, #1 @ raiz((x1 - x3)**2 + (y1 - y3)**2)
 		MOV R4, R8
 
-		CMP R4, #0x0 @ R4 == 0
+		@ Clasificacion de lados
+		CMP R0, R1 @ a == b
+		BEQ IFAC
+		BNE IFBC
+
+IFAC:	CMP R0, R2 @ a == c
+		MOVEQ R5, #1
+		MOVNE R5, #2
+		B COMP
+
+IFBC:	CMP R1, R2
+		MOVEQ R5, #2
+		BNE IFCA
+		B COMP
+
+IFCA:	CMP R2, R0
+		MOVEQ R5, #2
+		BNE ELSE
+		B COMP
+
+ELSE:	MOV R5, #3
+		B COMP
+
+COMP:	CMP R4, #0x0 @ R4 == 0
 		BEQ	CANCEL @ if R4 == 0 then jump FIN
 		B 	FIN
 
