@@ -176,10 +176,9 @@ COMP:	CMP R4, #0x0 @ R4 == 0
 		SUB R7, R7, R8
 		MUL R8, R0, R5
 		MUL R9, R8, R2
-		MOV R7, R9
 		@ div
 		MOV R10, R7 @ x = a
-		MOV R11, R8 @ y = 2
+		MOV R11, R9 @ y = 2
 		MOV R12, #0 @ count = 0
 		BL 	DIV @ x div y
 		MOV R7, R12
@@ -190,12 +189,12 @@ COMP:	CMP R4, #0x0 @ R4 == 0
 		MUL R10, R2, R2
 		ADD R9, R10, R9
 		SUB R8, R9, R8
-		MUL R9, R1, R5
-		MUL R10, R9, R2
-		MOV R8, R10
+		MUL R8, R1, R5
+		MUL R8, R8, R2
+		
 		@ div
-		MOV R10, R8 @ x = a
-		MOV R11, R9 @ y = 2
+		MOV R10, R9 @ x = a
+		MOV R11, R8 @ y = 2
 		MOV R12, #0 @ count = 0
 		BL 	DIV @ x div y
 		MOV R8, R12
