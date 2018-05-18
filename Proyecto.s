@@ -1,6 +1,39 @@
+.data
+
+X1: .int 2
+Y1: .int 6
+
+X2: .int 9
+Y2: .int 12
+
+X3: .int 15
+Y3: .int 20
+
 .text
 .global _start
-_start:	MOV R0, #2 @ x1 --> lado a
+_start:	
+		LDR R0, =#X1 @ x1 --> lado a
+		LDR R0, [R0] 
+		LDR R1, =#Y1 @ y1 --> lado b
+		LDR R1, [R1] 
+		LDR R2, =#X2 @ x2 --> lado c
+		LDR R2, [R2] 
+		LDR R3, =#Y2 @ y2 --> perimetro
+		LDR R3, [R3] 
+		LDR R4, =#X3 @ x3 --> Area
+		LDR R4, [R4] 
+		LDR R5, =#Y3 @ y3 --> clasificacion por lados 
+		LDR R5, [R5] 
+		LDR R6, =#0 @ clasificacion por angulos
+		LDR R7, =#0 @ a
+		LDR R8, =#0 @ b
+		LDR R9, =#0 @ c
+		LDR R10, =#0 @ x
+		LDR R11, =#0 @ y
+		LDR R12, =#0 @ count
+
+		/*
+		MOV R0, #2 @ x1 --> lado a
 		MOV R1, #6 @ y1 --> lado b
 		MOV R2, #9 @ x2 --> lado c
 		MOV R3, #12 @ y2 --> perimetro
@@ -13,7 +46,7 @@ _start:	MOV R0, #2 @ x1 --> lado a
 		MOV R10, #0 @ x
 		MOV R11, #0 @ y
 		MOV R12, #0	@ count
-
+		*/
 
 		SUB R6, R2, R0 @ x2 - x1
 		SUB R7, R3, R1 @ y2 - y1
