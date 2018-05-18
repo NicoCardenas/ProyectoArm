@@ -1,11 +1,19 @@
 .text
 .global _start
-_start:	MOV R0, #2 @ x1
-		MOV R1, #6 @ y1
-		MOV R2, #9 @ x2
-		MOV R3, #12 @ y2
-		MOV R4, #15 @ x3
-		MOV R5, #20 @ y3
+_start:	MOV R0, #2 @ x1 --> lado a
+		MOV R1, #6 @ y1 --> lado b
+		MOV R2, #9 @ x2 --> lado c
+		MOV R3, #12 @ y2 --> perimetro
+		MOV R4, #15 @ x3 --> Area
+		MOV R5, #20 @ y3 --> clasificacion por lados 
+		MOV R6, #0 @ clasificacion por angulos
+		MOV R7, #0 @ a
+		MOV R8, #0 @ b
+		MOV R9, #0 @ c
+		MOV R10, #0 @ x
+		MOV R11, #0 @ y
+		MOV R12, #0	@ count
+
 
 		SUB R6, R2, R0 @ x2 - x1
 		SUB R7, R3, R1 @ y2 - y1
@@ -109,7 +117,81 @@ ELSE:	MOV R5, #3
 
 COMP:	CMP R4, #0x0 @ R4 == 0
 		BEQ	CANCEL @ if R4 == 0 then jump FIN
-		B 	FIN
+
+		@ div( (a*a)+(b*b)-(c*c), 2*a*b)
+		MUL R6, R0, R0
+		MUL R7, R1, R1
+		MUL R8, R2, R2
+		ADD R6, R7, R6
+		SUB R6, R6, R8
+		MOV R5, #2
+		MUL R7, R0, R5
+		MUL R8, R7, R1
+		MOV R7, R8
+		@ div
+		MOV R10, R6 @ x = a
+		MOV R11, R7 @ y = 2
+		MOV R12, #0 @ count = 0
+		BL 	DIV @ x div y
+		MOV R6, R12
+
+		@ div( (a*a)+(c*c)-(b*b), 2*a*c)
+		MUL R7, R0, R0
+		MUL R8, R1, R1
+		MUL R9, R2, R2
+		ADD R7, R9, R7
+		SUB R7, R7, R8
+		MUL R8, R0, R5
+		MUL R9, R8, R2
+		MOV R7, R9
+		@ div
+		MOV R10, R7 @ x = a
+		MOV R11, R8 @ y = 2
+		MOV R12, #0 @ count = 0
+		BL 	DIV @ x div y
+		MOV R7, R12
+
+		@ div( (b*b)+(c*c)-(a*a), 2*c*b)
+		MUL R8, R0, R0
+		MUL R9, R1, R1
+		MUL R10, R2, R2
+		ADD R9, R10, R9
+		SUB R8, R9, R8
+		MUL R9, R1, R5
+		MUL R10, R9, R2
+		MOV R8, R10
+		@ div
+		MOV R10, R8 @ x = a
+		MOV R11, R9 @ y = 2
+		MOV R12, #0 @ count = 0
+		BL 	DIV @ x div y
+		MOV R8, R12
+
+		@ if (cosa == 0| cosb == 0| cosc == 0)
+		CMP R6, #0
+		BEQ RECT
+		CMP R7, #0
+		BEQ RECT
+		CMP R8, #0
+		BEQ RECT
+		@ else if (cosa < 0| cosb < 0| cosc < 0)
+		CMP R6, #0
+		BGT OBTU
+		CMP R7, #0
+		BGT OBTU
+		CMP R8, #0
+		BGT OBTU
+		B ACUD
+
+
+RECT:	MOV R6, #1
+		B FIN
+
+OBTU:	MOV R6, #3
+		B FIN
+
+ACUD:	MOV R6, #2
+		B FIN
 
 RAIZ:	CMP R7, #0
 		ADDEQ R8, R8, #1
@@ -144,7 +226,7 @@ DIV:	CMP R10, R11 @ x < y
 
 CANCEL: MOV R0, #-1
 		B FIN
-		@ MOV R0, R6 @ echo $? respuesta
+
 FIN:	MOV R7, #1
 		SVC 0
 .end
