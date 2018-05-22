@@ -32,22 +32,6 @@ _start:
 		LDR R11, =#0 @ y
 		LDR R12, =#0 @ count
 
-		/*
-		MOV R0, #2 @ x1 --> lado a
-		MOV R1, #6 @ y1 --> lado b
-		MOV R2, #9 @ x2 --> lado c
-		MOV R3, #12 @ y2 --> perimetro
-		MOV R4, #15 @ x3 --> Area
-		MOV R5, #20 @ y3 --> clasificacion por lados 
-		MOV R6, #0 @ clasificacion por angulos
-		MOV R7, #0 @ a
-		MOV R8, #0 @ b
-		MOV R9, #0 @ c
-		MOV R10, #0 @ x
-		MOV R11, #0 @ y
-		MOV R12, #0	@ count
-		*/
-
 		SUB R6, R2, R0 @ x2 - x1
 		SUB R7, R3, R1 @ y2 - y1
 		MUL R8, R6, R6 @ (x2 - x1)**2
@@ -151,7 +135,7 @@ ELSE:	MOV R5, #3
 COMP:	CMP R4, #0x0 @ R4 == 0
 		BEQ	CANCEL @ if R4 == 0 then jump FIN
 
-		@ div( (a*a)+(b*b)-(c*c), 2*a*b)
+		@ div( (a*a)+(b*b)-(c*c), 2*a*b) = cosc
 		MUL R6, R0, R0
 		MUL R7, R1, R1
 		MUL R8, R2, R2
@@ -161,14 +145,13 @@ COMP:	CMP R4, #0x0 @ R4 == 0
 		MUL R7, R0, R5
 		MUL R8, R7, R1
 		MOV R7, R8
-		@ div
-		MOV R10, R6 @ x = a
-		MOV R11, R7 @ y = 2
-		MOV R12, #0 @ count = 0
-		BL 	DIV @ x div y
-		MOV R6, R12
+		@ Division
+		CMP R6, #0
+		MOVGT R6, #-1
+		MOVEQ R6, #0
+		MOVLT R6, #1
 
-		@ div( (a*a)+(c*c)-(b*b), 2*a*c)
+		@ div( (a*a)+(c*c)-(b*b), 2*a*c) = cosb
 		MUL R7, R0, R0
 		MUL R8, R1, R1
 		MUL R9, R2, R2
@@ -176,28 +159,25 @@ COMP:	CMP R4, #0x0 @ R4 == 0
 		SUB R7, R7, R8
 		MUL R8, R0, R5
 		MUL R9, R8, R2
-		@ div
-		MOV R10, R7 @ x = a
-		MOV R11, R9 @ y = 2
-		MOV R12, #0 @ count = 0
-		BL 	DIV @ x div y
-		MOV R7, R12
+		@ Division
+		CMP R7, #0
+		MOVGT R7, #-1
+		MOVEQ R7, #0
+		MOVLT R7, #1
 
-		@ div( (b*b)+(c*c)-(a*a), 2*c*b)
+		@ div( (b*b)+(c*c)-(a*a), 2*c*b) = cosa
 		MUL R8, R0, R0
 		MUL R9, R1, R1
 		MUL R10, R2, R2
 		ADD R9, R10, R9
 		SUB R8, R9, R8
 		MUL R8, R1, R5
-		MUL R8, R8, R2
-		
-		@ div
-		MOV R10, R9 @ x = a
-		MOV R11, R8 @ y = 2
-		MOV R12, #0 @ count = 0
-		BL 	DIV @ x div y
-		MOV R8, R12
+		MUL R8, R2, R8
+		@ Division
+		CMP R8, #0
+		MOVGT R8, #-1
+		MOVEQ R8, #0
+		MOVLT R8, #1
 
 		@ if (cosa == 0| cosb == 0| cosc == 0)
 		CMP R6, #0
@@ -214,7 +194,6 @@ COMP:	CMP R4, #0x0 @ R4 == 0
 		CMP R8, #0
 		BGT OBTU
 		B ACUD
-
 
 RECT:	MOV R6, #1
 		B FIN
